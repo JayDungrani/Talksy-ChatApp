@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import { connectDB } from './config/connectDB.js'
 import cookieParser from 'cookie-parser'
 import userRoutes from './routes/userRoutes.js'
+import friendRoutes from './routes/friendRoutes.js'
 
 dotenv.config()
 connectDB()
@@ -13,6 +14,7 @@ app.use(express.json())
 app.use(cookieParser())
 
 app.use("/api/user", userRoutes)
+app.use("/api/friend", friendRoutes)
 
 app.listen(process.env.port, ()=>{
     console.log('server started')

@@ -38,7 +38,7 @@ export const login = async(req, res)=>{
 
         const isMatch = await user.matchPassword(password)
         if(!isMatch){
-            return res.status(400).json({message : "Invalid credintials"})
+            return res.status(400).json({message : "Enter correct password!"})
         }
         const token = await generateToken(user._id)
         res.cookie("jwtToken", token,{
@@ -66,7 +66,7 @@ export const logOut = async(req, res)=>{
 export const getMe = async(req, res)=>{
     try {
         const {userId} = req.token
-        const foundUser = await User.findOne({_id : userId})
+        const foundUser = await User.findById(userId)
         res.status(200).json({user : foundUser})
     } catch (error) {
         res.status(400).json({message : "User not found!"})
@@ -85,7 +85,7 @@ export const getAllUsers = async(req, res)=>{
 export const getUser = async(req, res)=>{
     try {
         const userId = req.query.id;
-        const foundUser = await User.findOne({_id : userId})
+        const foundUser = await User.findById(userId)
         return res.status(200).json({user : foundUser})
     } catch (error) {
         return res.status(400).json({message : "User not found!"})
