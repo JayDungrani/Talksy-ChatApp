@@ -42,7 +42,7 @@ export const sendRequest = async (req, res) => {
         const createRequest = new FriendRequest({ sender: senderId, recipient: receiverId })
         await createRequest.save()
 
-        res.status(200).json({ friendRequest: createRequest })
+        res.status(200).json({message : "Request sent successfully!", friendRequest: createRequest })
 
     } catch (error) {
         res.status(400).json({ message: error.message })

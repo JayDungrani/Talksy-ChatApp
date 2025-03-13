@@ -8,7 +8,7 @@ const userSchema = new Schema({
     profilePicture: { type: String, default: "" },
     status: { type: String, default: "Hey there! I'm using Talksy" },
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    blockedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    // blockedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 },
     { timestamps: true }
 )
