@@ -10,4 +10,5 @@ router.route("/logout").post(logOut);
 router.route("/me").get(authMiddleware, getMe)
 router.route("/all").get(authMiddleware, getAllUsers)
 router.route("/getuser").get(authMiddleware, getUser)
+
 export default router;

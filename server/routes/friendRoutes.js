@@ -7,4 +7,5 @@ const router = Router()
 router.route("/send/:receiverId").post(authMiddleware, sendRequest)
 router.route("/accept/:requestId").post(authMiddleware, acceptRequest)
 router.route("/reject/:requestId").delete(authMiddleware, rejectRequest)
+
 export default router;

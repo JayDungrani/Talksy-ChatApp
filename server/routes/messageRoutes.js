@@ -6,4 +6,5 @@ const router = Router()
 router.route("/:chatId").get(authMiddleware ,getMessages)
 router.route("/send").post(authMiddleware, sendMessage)
 router.route("/read/:chatId").put(authMiddleware, readMessage)
+
 export default router
