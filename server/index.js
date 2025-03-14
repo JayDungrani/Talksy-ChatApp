@@ -7,6 +7,7 @@ import friendRoutes from './routes/friendRoutes.js'
 import chatRoutes from './routes/chatRoutes.js'
 import messageRoutes from './routes/messageRoutes.js'
 import notificationRoutes from "./routes/notificationRoutes.js"
+import cors from 'cors'
 
 dotenv.config()
 connectDB()
@@ -15,6 +16,10 @@ const app = express()
 
 app.use(express.json())
 app.use(cookieParser())
+app.use(cors({
+    origin : process.env.FRONTEND_URL,
+    credentials : true
+}))
 
 app.use("/api/user", userRoutes)
 app.use("/api/friend", friendRoutes)

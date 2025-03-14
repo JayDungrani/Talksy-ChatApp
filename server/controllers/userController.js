@@ -33,7 +33,7 @@ export const login = async(req, res)=>{
         const {email, password} = req.body
         const user = await User.findOne({email}).select("+password");
         if(!user) {
-            return res.status(400).json({message : "User not found!"})
+            return res.status(400).json({message : "Enter correct email address!"})
         }
 
         const isMatch = await user.matchPassword(password)
@@ -47,8 +47,8 @@ export const login = async(req, res)=>{
             samesite : "strict",
             maxAge : 10 * 24 * 60 * 60 * 1000
         })
-
-        res.status(200).json(user);
+        
+        res.status(200).json({message : "Logged in successfully"});
     } catch (error) {
         res.status(400).json({message : "Server Error!"})
     }
