@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
-import { loginUser } from '../redux/authSlice';
+import { fetchUser, loginUser } from '../redux/authSlice';
 import Snackbar from '@mui/joy/Snackbar';
 import { IoMailOutline } from "react-icons/io5";
 import { RiKey2Line } from "react-icons/ri";
@@ -19,7 +19,7 @@ const LoginPage = () => {
 
   const [showSnake, setShowSnake] = useState(true)
   const [showPassword, setShowPassword] = useState(false)
-  const { isAuthenticated, loading, error } = useSelector((state) => state.auth);
+  const {isAuthenticated, loading, error } = useSelector((state) => state.auth);
 
   const handleSubmit = async (e) => {
     try {
@@ -27,6 +27,7 @@ const LoginPage = () => {
       const resultAction = await dispatch(loginUser(userData)).unwrap();
 
       if (resultAction) {
+        await dispatch(fetchUser()).unwrap()
         navigate("/chats"); // Redirect on successful login
       }
     } catch (error) {
@@ -34,9 +35,14 @@ const LoginPage = () => {
     }
   };
 
+  useEffect(()=>{
+    if(isAuthenticated){
+      navigate("/chats")
+    }
+  },[])
 
   return (
-    <div className='w-full h-full absolute top-0 left-0 flex flex-col items-center justify-center bg-[url(https://www.shutterstock.com/image-vector/seamless-pattern-outline-icons-seo-600nw-659141167.jpg)]'>
+    <div className='w-full h-full absolute top-0 left-0 flex flex-col items-center justify-center bg-gradient-to-br from-cyan-200 to-sky-500'>
       {error && <Snackbar
         open={showSnake}
         anchorOrigin={{ 'vertical': 'top', 'horizontal': 'center' }}
@@ -55,7 +61,7 @@ const LoginPage = () => {
 
         <div className='flex flex-col items-center gap-2'>
 
-          <label className='w-full flex items-center gap-2 border-2 border-slate-300 px-2 py-2 rounded-lg focus-within:border-slate-600'>
+          <label className='w-full flex items-center gap-2 border-2 border-slate-300 px-2 py-2 rounded-lg focus-within:border-[#009DFF]'>
             <IoMailOutline className='text-2xl text-slate-600' />
             <input
               type='email'
@@ -84,8 +90,8 @@ const LoginPage = () => {
             Show password
           </label>
         </div>
-        <button type='submit' className='bg-[#6E00FF] py-2 text-white rounded-lg font-semibold cursor-pointer'>Login</button>
-        <p className='text-center text-slate-500'>Don't have an account? <Link to='/signup' className='text-black'>Sign Up</Link></p>
+        <button type='submit' className='bg-[#009DFF] py-2 text-white rounded-lg font-semibold cursor-pointer'>Login</button>
+        <p className='text-center text-slate-500'>Don't have an account? <Link to='/signup' className='text-[#007ac6]'>Sign Up</Link></p>
       </form>
     </div>
   )

@@ -13,15 +13,15 @@ export const signUp = async (req, res) => {
         const newUser = new User({name, email, password})
         await newUser.save()
 
-        const token = generateToken(newUser._id)
-        res.cookie("jwtToken",token,{
+        const token = await generateToken(newUser._id)
+        res.cookie("jwtToken", token,{
             httpOnly : true,
             secure : true,
             samesite : "strict",
             maxAge : 10 * 24 * 60 * 60 * 1000
         })
 
-        res.status(201).json(newUser);
+        res.status(200).json({message : "SignUp successfull!"});
 
     } catch (error) {
         res.status(500).json({ message: "Server error!"});
