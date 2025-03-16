@@ -51,7 +51,7 @@ export const sendRequest = async (req, res) => {
 
 export const acceptRequest = async(req, res)=>{
     try {
-        const senderId = req.token.userId
+        const receiverId = req.token.userId
         const {requestId} = req.params
 
         const friendRequest = await FriendRequest.findById(requestId)
@@ -59,7 +59,7 @@ export const acceptRequest = async(req, res)=>{
             res.status(404).json({message : "Friend request not found!"})
         }
 
-        const receiverId = friendRequest.recipient
+        const senderId = friendRequest.sender
         const existingChat = await Chat.findOne({
             isGroupChat: false,
             members: { $all: [senderId, receiverId] }

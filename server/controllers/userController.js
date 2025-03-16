@@ -73,12 +73,16 @@ export const getMe = async(req, res)=>{
     }
 }
 
-export const getAllUsers = async(req, res)=>{
+export const getUsersList = async(req, res)=>{
     try {
-        const allUsers = await User.find()
-        res.status(200).json(allUsers)
+        const searchQuery = req.query.search || ""; // Get search query from request
+        const regex = new RegExp(searchQuery, "i"); // Case-insensitive search
+
+        const users = await User.find({ name: regex })
+        .select('name profilePicture status'); // Find users by name
+        res.status(200).json({usersList : users});
     } catch (error) {
-        res.status(400).json({message : "Server Error!"})
+        res.status(500).json({ message: "Server Error!" });
     }
 }
 

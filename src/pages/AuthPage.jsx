@@ -2,12 +2,13 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { fetchUser } from '../redux/authSlice'
+import Loading from '../components/Loading'
 
 const AuthPage = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const { isAuthenticated } = useSelector((state) => state.auth)
+    const { isAuthenticated, loading } = useSelector((state) => state.auth)
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -31,7 +32,8 @@ const AuthPage = () => {
 
     return (
         <div className='w-full h-full flex items-center justify-center'>
-            <p className='text-5xl'>Welcome to talksy</p>
+            {/* <p className='text-5xl'>Welcome to talksy</p> */}
+            {loading && <Loading/>}
         </div>
     )
 }

@@ -68,7 +68,7 @@ const SignUpPage = () => {
 
         <div className='flex flex-col items-center gap-2'>
 
-          <label className='w-full flex items-center gap-2 border-2 border-slate-300 px-2 py-2 rounded-lg focus-within:border-slate-600'>
+          <label className='w-full flex items-center gap-2 border-2 border-slate-300 px-2 py-2 rounded-lg focus-within:border-[#009DFF]'>
             <FaRegUserCircle className='text-2xl text-slate-600' />
             <input
               type='text'
@@ -80,7 +80,7 @@ const SignUpPage = () => {
             ></input>
           </label>
 
-          <label className='w-full flex items-center gap-2 border-2 border-slate-300 px-2 py-2 rounded-lg focus-within:border-slate-600'>
+          <label className='w-full flex items-center gap-2 border-2 border-slate-300 px-2 py-2 rounded-lg focus-within:border-[#009DFF]'>
             <IoMailOutline className='text-2xl text-slate-600' />
             <input
               type='email'
@@ -91,7 +91,7 @@ const SignUpPage = () => {
             ></input>
           </label>
 
-          <label className='w-full flex items-center gap-2 border-2 border-slate-300 px-2 py-2 rounded-lg focus-within:border-slate-600'>
+          <label className='w-full flex items-center gap-2 border-2 border-slate-300 px-2 py-2 rounded-lg focus-within:border-[#009DFF]'>
             <RiKey2Line className='text-2xl text-slate-600' />
             <input
               type={showPassword ? 'text' : 'password'}

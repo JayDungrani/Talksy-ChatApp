@@ -6,7 +6,8 @@ const chatSchema = new mongoose.Schema(
     chatName: { type: String, default: "One-to-One Chat" },
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }],
     latestMessage: { type: mongoose.Schema.Types.ObjectId, ref: "Message" },
-    admins: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }]
+    admins: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    profilePicture : {type : String}
   },
   { timestamps: true }
 );

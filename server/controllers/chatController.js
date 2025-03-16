@@ -2,13 +2,16 @@ import { Chat } from "../models/chatModel.js"
 
 export const createGroupChat = async(req, res)=>{
     try {
-        const {adminsId, chatName, members} = req.body
+        const defaultPic = "https://w7.pngwing.com/pngs/522/207/png-transparent-profile-icon-computer-icons-business-management-social-media-service-people-icon-blue-company-people.png"
+
+        const {adminsId, chatName, members, profilePicture = defaultPic} = req.body
 
         const newGroup = new Chat({
             isGroupChat : true,
             chatName : chatName,
             members : members,
-            admins : adminsId
+            admins : adminsId,
+            profilePicture : profilePicture
         })
 
         await newGroup.save()
@@ -23,8 +26,8 @@ export const getAllChats = async(req, res)=>{
     try {
         const {userId} = req.token
 
-        const defaultChats = await Chat.find({members : userId, isGroupChat : false})
-        .populate('members', 'name email')
+        const normalChats = await Chat.find({members : userId, isGroupChat : false})
+        .populate('members', 'name email profilePicture')
         .populate('latestMessage')
         .sort({updatedAt : -1})
 
@@ -32,7 +35,7 @@ export const getAllChats = async(req, res)=>{
         .populate('latestMessage')
         .sort({updatedAt : -1})
 
-        const formattedDefalutChat = defaultChats.map(chat =>({
+        const formattedNormalChat = normalChats.map(chat =>({
             ...chat._doc,
             latestMessage : chat.latestMessage || {content : "No messages yet!"}
         }))
@@ -41,7 +44,7 @@ export const getAllChats = async(req, res)=>{
             ...chat._doc,
             latestMessage : chat.latestMessage || {content : "No messages yet!"}
         }))
-        res.status(200).json({defaultChats : formattedDefalutChat, groupChats : formattedGroupChat})
+        res.status(200).json({normalChats : formattedNormalChat, groupChats : formattedGroupChat})
 
     } catch (error) {
         res.status(400).json({message : error.message})

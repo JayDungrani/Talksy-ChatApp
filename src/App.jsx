@@ -17,7 +17,7 @@ function App() {
   return (
     <div className='h-screen w-screen
                     grid lg:grid-cols-[1fr_13fr] lg:gap-5 lg:grid-rows-none lg:p-5 
-                    grid-rows-[1fr_9fr] grid-cols-none gap-0'
+                    grid-rows-[1fr_9fr] grid-cols-none gap-0 bg-[#EFF6FC]'
     >
       {user && <Navbar user={user} />}
       <Routes>
