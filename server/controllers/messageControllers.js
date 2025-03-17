@@ -10,8 +10,7 @@ export const getMessages = async (req, res) => {
         if (!messageList) {
             return res.status(404).json({ message: "No messages yet!" });
         }
-
-        res.status(200).json({ messageList })
+        res.status(200).json(messageList)
     } catch (error) {
         res.status(400).json(error.message)
     }
@@ -25,7 +24,7 @@ export const sendMessage = async (req, res) => {
         const message = new Message({
             sender: userId,
             chat: chatId,
-            content: content
+            content: content,
         })
 
         await message.save()
@@ -46,9 +45,6 @@ export const readMessage = async (req, res) => {
             { chat: chatId, sender: { $ne: userId }, isRead: false },
             { $set: { isRead: true } }
         )
-        if (updateMessage.modifiedCount == 0) {
-            return res.status(204)
-        }
         res.status(200).json({ message: "Updated message successfully!", updateMessage })
 
     } catch (error) {

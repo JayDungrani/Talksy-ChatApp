@@ -1,99 +1,102 @@
+import {getUnreadMessages} from "../config/getUnreadMessages.js"
 import { Chat } from "../models/chatModel.js"
 
-export const createGroupChat = async(req, res)=>{
+export const createGroupChat = async (req, res) => {
     try {
         const defaultPic = "https://w7.pngwing.com/pngs/522/207/png-transparent-profile-icon-computer-icons-business-management-social-media-service-people-icon-blue-company-people.png"
 
-        const {adminsId, chatName, members, profilePicture = defaultPic} = req.body
+        const { adminsId, chatName, members, profilePicture = defaultPic } = req.body
 
         const newGroup = new Chat({
-            isGroupChat : true,
-            chatName : chatName,
-            members : members,
-            admins : adminsId,
-            profilePicture : profilePicture
+            isGroupChat: true,
+            chatName: chatName,
+            members: members,
+            admins: adminsId,
+            profilePicture: profilePicture
         })
 
         await newGroup.save()
-        res.status(200).json({message : "Group created successfully!", newGroup})
+        res.status(200).json({ message: "Group created successfully!", newGroup })
 
     } catch (error) {
-        res.status(400).json({message : error.message})
+        res.status(400).json({ message: error.message })
     }
 }
 
-export const getAllChats = async(req, res)=>{
+export const getAllChats = async (req, res) => {
     try {
-        const {userId} = req.token
+        const { userId } = req.token
 
-        const normalChats = await Chat.find({members : userId, isGroupChat : false})
-        .populate('members', 'name email profilePicture')
-        .populate('latestMessage')
-        .sort({updatedAt : -1})
+        const chats = await Chat.find({ members: userId })
+            .populate('members', 'name email profilePicture isOnline updatedAt')
+            .populate('latestMessage')
+            .sort({ updatedAt: -1 })
 
-        const groupChats = await Chat.find({members : userId, isGroupChat : true})
-        .populate('latestMessage')
-        .sort({updatedAt : -1})
+        const unreadCounts = await getUnreadMessages(userId)
+        const formattedChats = chats.map((chat) => {
+            // Ensure unreadCounts is an array, otherwise default to an empty array
+            const unreadCount = Array.isArray(unreadCounts)
+              ? unreadCounts.find((c) => c.chatId.equals(chat._id))?.unreadCount || 0
+              : 0;
+          
+            return {
+              ...chat.toObject(), // Convert Mongoose document to plain object
+              latestMessage: chat.latestMessage || { content: "No messages yet!" },
+              unreadCount, // Add unread message count
+            };
+          });
+          
 
-        const formattedNormalChat = normalChats.map(chat =>({
-            ...chat._doc,
-            latestMessage : chat.latestMessage || {content : "No messages yet!"}
-        }))
-
-        const formattedGroupChat = groupChats.map(chat =>({
-            ...chat._doc,
-            latestMessage : chat.latestMessage || {content : "No messages yet!"}
-        }))
-        res.status(200).json({normalChats : formattedNormalChat, groupChats : formattedGroupChat})
+        res.status(200).json({ chats: formattedChats })
 
     } catch (error) {
-        res.status(400).json({message : error.message})
+        res.status(400).json({ message: error.message })
     }
 }
 
-export const getChatById = async(req, res)=>{
+export const getChatById = async (req, res) => {
     try {
-        const {userId} = req.token;
-        const {chatId} = req.params;
+        const { userId } = req.token;
+        const { chatId } = req.params;
 
-        const chat = await Chat.find({_id : chatId, members : userId})
-        .populate('members', 'name email profilePicture')
-        .populate('admins', 'name email profilePicture status')
+        const chat = await Chat.findOne({ _id: chatId, members: userId })
+            .populate('members', 'name email profilePicture isOnline')
+            .populate('admins', 'name email profilePicture status')
 
-        if(!chat){
-            return res.status(404).json({message : "Chat not found!"})
+        if (!chat) {
+            return res.status(404).json({ message: "Chat not found!" })
         }
-        res.status(200).json({chat : chat})
+        res.status(200).json(chat)
 
     } catch (error) {
-        res.status(400).json({message : error.message})
+        res.status(400).json({ message: error.message })
     }
 }
 
-export const renameChat = async(req, res)=>{
+export const renameChat = async (req, res) => {
     try {
-        const {userId} = req.token;
-        const {chatId, chatName} = req.body;
+        const { userId } = req.token;
+        const { chatId, chatName } = req.body;
 
         const chat = await Chat.findOneAndUpdate(
-            {_id : chatId, admins : userId},
-            {chatName : chatName},
-            {new : true}
+            { _id: chatId, admins: userId },
+            { chatName: chatName },
+            { new: true }
         );
 
-        if(!chat){
-            return res.status(400).json({message : "Chat not found! or You are not authorized to rename!"})
+        if (!chat) {
+            return res.status(400).json({ message: "Chat not found! or You are not authorized to rename!" })
         }
 
-        res.status(200).json({message : "Group renamed successfully!", chat})
+        res.status(200).json({ message: "Group renamed successfully!", chat })
     } catch (error) {
-        res.status(2400).json({message : error.message})
+        res.status(2400).json({ message: error.message })
     }
 }
 
-export const addMember = async(req, res)=>{
+export const addMember = async (req, res) => {
     try {
-        const { userId } = req.token;  
+        const { userId } = req.token;
         const { chatId, memberId } = req.body;
 
         if (!chatId || !memberId) {
@@ -124,11 +127,11 @@ export const addMember = async(req, res)=>{
         res.status(200).json({ message: "Member added successfully!", chat });
 
     } catch (error) {
-        res.status(400).json({message : error.message})
+        res.status(400).json({ message: error.message })
     }
 }
 
-export const removeMember = async(req, res)=>{
+export const removeMember = async (req, res) => {
     try {
         const { userId } = req.token;  // Admin's ID
         const { chatId, memberId } = req.body;
