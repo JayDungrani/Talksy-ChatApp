@@ -13,7 +13,8 @@ export default ({ mode }) => {
           target: process.env.VITE_API_BASE_URL,
           changeOrigin: true,
           secure: false
-        }
+        },
+        
       }
     }
   })

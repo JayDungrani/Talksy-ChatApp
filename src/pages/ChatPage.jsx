@@ -26,7 +26,7 @@ const ChatPage = () => {
   return (
     <>
       {isAuthenticated &&
-        <div className='overflow-auto lg:grid lg:grid-cols-[1fr_2fr] gap-6 w-full p-1'>
+        <div className='overflow-hidden max-h-screen lg:grid lg:grid-cols-[1fr_2fr] gap-6 w-full p-1 h-full'>
           <div className='w-full h-full bg-slate-100 lg:hidden'>
             <Loading showLoading={singleChatLoading} />
             {!openedChat ?
@@ -34,7 +34,7 @@ const ChatPage = () => {
               : <ChatWithMessage />}
           </div>
           <div className='max-lg:hidden flex flex-col items-center gap-5 w-full'>
-            <div className='bg-white flex items-center rounded-2xl gap-3 px-3 shadow-sm shadow-slate-300 w-full'>
+            <div className='bg-white rounded-2xl gap-3 px-3 shadow-sm shadow-slate-300 w-full'>
               <SearchBar />
             </div>
             <div className='w-full rounded-2xl shadow-sm shadow-slate-300 bg-white'>
@@ -49,7 +49,9 @@ const ChatPage = () => {
               </div>
             }
             {(!openedChat && !singleChatLoading) &&
-              <p className='h-full flex items-center justify-center text-4xl pb-40'>Open a chat to start a conversation!</p> 
+              <p className='h-full flex items-center justify-center text-4xl pb-40'>
+                Open a chat to start a conversation!
+              </p> 
             }
             {openedChat && <ChatWithMessage />}
           </div>

@@ -1,7 +1,7 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { Navbar } from './components/Navbar'
-import ChatPage from './pages/chatPage'
 import SettingsPage from './pages/SettingsPage'
+import ChatPage from './pages/ChatPage'
 import NotificationPage from './pages/NotificationPage'
 import LoginPage from './pages/LoginPage'
 import SignUpPage from './pages/SignUpPage'

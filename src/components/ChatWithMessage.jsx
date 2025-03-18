@@ -53,7 +53,7 @@ const ChatWithMessage = () => {
 
   return (
     <div
-      className='p-3 absolute top-0 left-0 w-screen h-screen bg-white flex flex-col
+      className='p-3 overflow-hidden absolute top-0 left-0 w-screen h-screen bg-white flex flex-col
       lg:static lg:w-full lg:h-full lg:rounded-2xl'>
 
       <div className='flex justify-between items-center pb-3 border-b-1 border-b-slate-400'>
@@ -74,23 +74,32 @@ const ChatWithMessage = () => {
 
       <div className='pt-4 flex flex-col justify-between h-full'>
 
-        {(messageList.length !==0) ?
-          <div className='flex flex-col gap-4'>
-            {messageList.map((message) =>
-              <SingleMessage message={message} userId={user._id} key={message._id}/>
-            )}
+        {(messageList.length !== 0) ?
+          <div className='flex flex-col gap-4 max-h-[78vh] lg:max-h-[66vh] overflow-auto'>
+            {messageList.map((message, index) => {
+              const showUserDetails =
+                index === 0 || messageList[index - 1].sender._id !== message.sender._id;
+
+              return (<SingleMessage
+                message={message}
+                userId={user._id}
+                key={message._id}
+                isGroupChat={openedChat.isGroupChat}
+                showUserDetails={showUserDetails}
+              />)
+            })}
           </div>
           :
           <p className='text-2xl text-slate-500 self-center'>No messages yet!</p>
         }
 
-        <div className='flex items-center gap-2'>
-          <input 
-          type='text' 
-          placeholder='Type your message here...' 
-          className='bg-[#EFF6FC] py-2 px-5 rounded-xl w-full'
-          value={content}
-          onChange={(e)=>setContent(e.target.value)}
+        <div className='flex items-center gap-2 max-lg:absolute max-lg:bottom-5 max-lg:w-full max-lg:left-0 max-lg:px-3'>
+          <input
+            type='text'
+            placeholder='Type your message here...'
+            className='bg-[#EFF6FC] py-2 px-5 rounded-xl w-full'
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
           />
           <div className='bg-[#006CD0] rounded-full' onClick={handleSendMessage}>
             <IoSend className='text-2xl cursor-pointer text-white m-2 ' />

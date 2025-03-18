@@ -5,7 +5,6 @@ export const fetchChatList = createAsyncThunk("chat/", async (_, {
     rejectWithValue }) => {
     try {
         const { data } = await axios.get("/api/chats", { withCredentials: true })
-        console.log(data)
         return data
     } catch (error) {
         return rejectWithValue(error.response?.data || "Something went wrong");

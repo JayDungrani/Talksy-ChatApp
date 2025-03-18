@@ -32,12 +32,8 @@ export const Navbar = ({ user }) => {
             className='w-12 rounded-full border-2 border-[#006CD0] lg:w-15'
           ></img>
         </Tooltip>
-
-        {/* <div className='bg-white rounded-xl h-7/10 shadow-sm shadow-slate-100 flex items-center gap-2 px-2 lg:hidden'>
-          <IoSearch className='text-slate-500 text-xl' />
-          <input type='search' placeholder='Search..' className='outline-none text-black flex items-center'></input>
-        </div> */}
-        <div className='bg-white h-7/10 rounded-3xl flex items-center gap-2 px-2 lg:hidden'>
+        
+        <div className='bg-white h-7/10 rounded-3xl flex items-center gap-2 px-2 lg:hidden justify-between'>
           <SearchBar />
         </div>
         <TbLogout className='text-3xl cursor-pointer lg:hidden' onClick={handleLogout} />

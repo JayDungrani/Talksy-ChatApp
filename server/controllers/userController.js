@@ -1,5 +1,6 @@
 import { generateToken } from "../config/tokenGenerator.js";
 import { User } from "../models/userModel.js";
+import {Chat} from "../models/chatModel.js"
 
 export const signUp = async (req, res) => {
     try {
@@ -75,23 +76,21 @@ export const getMe = async(req, res)=>{
 
 export const getUsersList = async(req, res)=>{
     try {
+        const{userId} = req.token
         const searchQuery = req.query.search || ""; // Get search query from request
         const regex = new RegExp(searchQuery, "i"); // Case-insensitive search
-
         const users = await User.find({ name: regex })
         .select('name profilePicture status'); // Find users by name
-        res.status(200).json({usersList : users});
+        
+        const chatList = await Chat.find({ members: userId }).select("members");
+        const chatUserIds = new Set(chatList.flatMap(chat => chat.members.map(id => id.toString())));
+        const filteredUsers = users.map(user => ({
+            ...user._doc, 
+            isFriend: chatUserIds.has(user._id.toString())
+        }));
+
+        res.status(200).json({usersList : filteredUsers});
     } catch (error) {
         res.status(500).json({ message: "Server Error!" });
-    }
-}
-
-export const getUser = async(req, res)=>{
-    try {
-        const userId = req.query.id;
-        const foundUser = await User.findById(userId)
-        return res.status(200).json({user : foundUser})
-    } catch (error) {
-        return res.status(400).json({message : "User not found!"})
     }
 }

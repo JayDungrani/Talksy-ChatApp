@@ -22,6 +22,7 @@ app.use(cors({
     credentials : true
 }))
 
+
 app.use("/api/user", userRoutes)
 app.use("/api/friend", friendRoutes)
 app.use("/api/chats", chatRoutes)

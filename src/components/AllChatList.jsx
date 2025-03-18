@@ -14,7 +14,7 @@ const AllChatList = ({ chatList, user, listLoading }) => {
           <CircularProgress size='md' />
         </div>
       }
-      {chatList.length === 0 && <p>No chats available. Create a new conversation now!</p>}
+      {chatList.length === 0 && <p className='py-3'>No chats available. Create a new conversation now!</p>}
       {chatList.map((chat) => {
         return chat.isGroupChat ?
           <SingleChat
