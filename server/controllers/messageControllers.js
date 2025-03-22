@@ -21,16 +21,17 @@ export const sendMessage = async (req, res) => {
         const { userId } = req.token;
         const { chatId, content } = req.body;
 
-        const message = new Message({
+        let message = new Message({
             sender: userId,
             chat: chatId,
             content: content,
         })
 
-        await message.save()
+        message = await message.save()
+        message = await message.populate("sender", "name profilePicture")
         await Chat.findByIdAndUpdate(chatId, { latestMessage: message._id })
 
-        res.status(200).json({ message: "Message send successfully!", message })
+        res.status(200).json( message )
     } catch (error) {
         res.status(400).json({ message: error.message })
     }

@@ -60,7 +60,7 @@ export const getChatById = async (req, res) => {
         const { chatId } = req.params;
 
         const chat = await Chat.findOne({ _id: chatId, members: userId })
-            .populate('members', 'name email profilePicture isOnline')
+            .populate('members', 'name email profilePicture isOnline updatedAt')
             .populate('admins', 'name email profilePicture status')
 
         if (!chat) {

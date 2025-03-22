@@ -9,6 +9,7 @@ import messageRoutes from './routes/messageRoutes.js'
 import notificationRoutes from "./routes/notificationRoutes.js"
 import cors from 'cors'
 import { Server } from 'socket.io'
+import { socketSetup } from './config/socketStup.js'
 
 dotenv.config()
 connectDB()
@@ -22,27 +23,16 @@ app.use(cors({
     credentials : true
 }))
 
-
 app.use("/api/user", userRoutes)
 app.use("/api/friend", friendRoutes)
 app.use("/api/chats", chatRoutes)
 app.use("/api/message", messageRoutes)
 app.use("/api/notification", notificationRoutes)
 
-const server = app.listen(process.env.port, ()=>{
-    console.log('server started')
+const server = app.listen(process.env.PORT, ()=>{
+  console.log('server started')
 })
 
-const io = new Server(server, {
-    pingTimeout: 60000,
-    cors: {
-      origin: process.env.FRONTEND_URL, 
-    },
-  });
+socketSetup(server)
 
-  io.on("connection", (socket)=>{
-    socket.on("setup", (userData)=>{
-      socket.join((userData._id));
-      socket.emit("connected")
-    })
-  })
+

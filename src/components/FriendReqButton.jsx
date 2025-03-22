@@ -12,7 +12,6 @@ const FriendReqButton = ({ receiverId }) => {
 
     const handleReq = async () => {
         try {
-            console.log("here")
             await dispatch(sendFriendReq(receiverId)).unwrap()
         } catch (error) {
             console.log(error)

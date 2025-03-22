@@ -77,7 +77,7 @@ export const acceptRequest = async(req, res)=>{
         })
         await newChat.save()
 
-        res.status(200).json({chat : newChat, request : friendRequest})
+        res.status(200).json({message : "Request accepted successfully!"})
     } catch (error) {
         res.status(400).json({message : error.message})
     }
@@ -85,18 +85,20 @@ export const acceptRequest = async(req, res)=>{
 
 export const rejectRequest = async(req, res)=>{
     try {
-        const senderId = req.token.userId
         const {requestId} = req.params
 
         const friendRequest = await FriendRequest.findById(requestId)
         if(!friendRequest){
             res.status(404).json({message : "Friend request not found!"})
         }
+        else if(friendRequest.status === 'accepted'){
+            res.status(409).json({message : "Friend Request is already accepted!"})
+        }
 
         friendRequest.status = 'rejected'
         await friendRequest.save()
 
-        res.status(200).json(friendRequest)
+        res.status(200).json({message : "Request rejected successfully!"})
 
     } catch (error) {
         res.status(400).json(error.message)

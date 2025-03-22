@@ -3,7 +3,6 @@ import SingleChat from './SingleChat'
 import { CircularProgress } from '@mui/joy'
 
 const AllChatList = ({ chatList, user, listLoading }) => {
-
   const getFriend = (members) => {
     return members[0]._id === user._id ? members[1] : members[0]
   }

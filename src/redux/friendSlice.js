@@ -4,8 +4,25 @@ import axios from "axios";
 export const sendFriendReq = createAsyncThunk("request/send", async (receiverId, { rejectWithValue }) => {
     try {
         const { data } = await axios.post(`/api/friend/send/${receiverId}`, { withCredintials:true });
-        console.log(data)
         return data
+    } catch (error) {
+        return rejectWithValue(error.response?.data || "Something went wrong");
+    }
+})
+
+export const acceptFriendReq = createAsyncThunk("request/accept", async (reqId, { rejectWithValue }) => {
+    try {
+        const {data} = await axios.post(`/api/friend/accept/${reqId}`, { withCredintials:true });
+        return data;
+    } catch (error) {
+        return rejectWithValue(error.response?.data || "Something went wrong");
+    }
+})
+
+export const rejectFriendReq = createAsyncThunk("request/reject", async (reqId, { rejectWithValue }) => {
+    try {
+        const {data} = await axios.post(`/api/friend/reject/${reqId}`, { withCredintials:true });
+        return data;
     } catch (error) {
         return rejectWithValue(error.response?.data || "Something went wrong");
     }
@@ -42,6 +59,28 @@ const friendSlice = createSlice({
                 state.notificationList = action.payload
             })
             .addCase(fetchNotifications.rejected, (state) => {
+                state.loading = false;
+            })
+
+            // ACCEPT NOTIFICAIONS
+            .addCase(acceptFriendReq.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(acceptFriendReq.fulfilled, (state) => {
+                state.loading = false;
+            })
+            .addCase(acceptFriendReq.rejected, (state) => {
+                state.loading = false;
+            })
+
+            // REJECT NOTIFICAIONS
+            .addCase(rejectFriendReq.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(rejectFriendReq.fulfilled, (state) => {
+                state.loading = false;
+            })
+            .addCase(rejectFriendReq.rejected, (state) => {
                 state.loading = false;
             })
     }

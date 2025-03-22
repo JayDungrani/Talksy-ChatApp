@@ -7,6 +7,7 @@ import { MdOutlineDone } from "react-icons/md";
 import { Tooltip } from '@mui/joy';
 import FriendReqButton from './FriendReqButton';
 import { RxCross2 } from "react-icons/rx";
+import { useSelector } from 'react-redux';
 
 const SearchBar = () => {
     const [query, setQuery] = useState("")
@@ -62,32 +63,32 @@ const SearchBar = () => {
 
                     {(showList && users.length === 0) && <p className='text-center text-slate-500 p-3'>{listMessage}</p>}
                     <label></label>
-                    {users.map((user, index) => (
-                        <li key={user._id} className={`flex gap-3 border-b-2 justify-between items-center border-b-slate-300 py-3  ${index === 0 && 'py-0 pb-3'}`}>
-                            <div className='flex items-center gap-3'>
-                                <img src={user.profilePicture} className='w-13 h-13 rounded-full' />
-                                <div className='flex flex-col'>
-                                    <p className='text-slate-700 font-semibold'>{user.name}</p>
-                                    <p className='text-slate-500'>{user.status}</p>
-                                </div>
+                    {users.map((user, index) => 
+                            <li key={user._id} className={`flex gap-3 border-b-2 justify-between items-center border-b-slate-300 py-3  ${index === 0 && 'py-0 pb-3'}`}>
+                                <div className='flex items-center gap-3'>
+                                    <img src={user.profilePicture} className='w-13 h-13 rounded-full' />
+                                    <div className='flex flex-col'>
+                                        <p className='text-slate-700 font-semibold'>{user.name}</p>
+                                        <p className='text-slate-500'>{user.status}</p>
+                                    </div>
 
-                            </div>
-                            <Tooltip
-                                title={user.isFriend ? "Friends Already!" : "Send Friend Request"}
-                                color='neutral'
-                                placement='top'
-                                variant='solid'
-                            >
-                                <div className={`text-white cursor-pointer rounded-full text-sm ${user.isFriend ? 'bg-slate-400 p-2' : 'bg-blue-500'}`}>
-                                    {user.isFriend ?
-                                        <MdOutlineDone className='font-bold' />
-                                        :
-                                        <FriendReqButton receiverId={user._id} />
-                                    }
                                 </div>
-                            </Tooltip>
-                        </li>
-                    ))}
+                                <Tooltip
+                                    title={user.isFriend ? "Friends Already!" : "Send Friend Request"}
+                                    color='neutral'
+                                    placement='top'
+                                    variant='solid'
+                                >
+                                    <div className={`text-white cursor-pointer rounded-full text-sm ${user.isFriend ? 'bg-slate-400 p-2' : 'bg-blue-500'}`}>
+                                        {user.isFriend ?
+                                            <MdOutlineDone className='font-bold' />
+                                            :
+                                            <FriendReqButton receiverId={user._id} />
+                                        }
+                                    </div>
+                                </Tooltip>
+                            </li>
+                        )}
 
                 </ul>
             </div>

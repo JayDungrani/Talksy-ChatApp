@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import { Navbar } from './components/Navbar'
 import SettingsPage from './pages/SettingsPage'
 import ChatPage from './pages/ChatPage'
@@ -6,14 +6,30 @@ import NotificationPage from './pages/NotificationPage'
 import LoginPage from './pages/LoginPage'
 import SignUpPage from './pages/SignUpPage'
 import AuthPage from './pages/AuthPage'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import ProtectedRoute from './components/ProtectRoute'
+import { useEffect } from 'react'
+import { fetchNotifications } from './redux/friendSlice'
+import socket from './socket'
+import { clearOpenedChat } from './redux/chatSlice'
 
 function App() {
-  const location = useLocation();
-  const hideNavbar = location.pathname === "/login" || location.pathname === "/signup";
-  const { user, isAuthenticated } = useSelector((state) => state.auth)
+  const dispatch = useDispatch()
+  const { user } = useSelector((state) => state.auth)
+  useEffect(() => {
+    if (!user?._id) return;
 
+    dispatch(fetchNotifications());
+    const handleBeforeUnload = () => {
+      socket.emit("userDisconneted",(user._id)); // Send user ID before closing
+      dispatch(clearOpenedChat())
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+
+  }, [dispatch])
   return (
     <div className='h-screen w-screen
                     grid lg:grid-cols-[1fr_13fr] lg:gap-5 lg:grid-rows-none lg:p-5 

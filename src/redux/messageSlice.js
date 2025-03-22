@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import socket from "../socket";
 
 export const fetchMessages = createAsyncThunk("messages/", async (chatId, {
     rejectWithValue }) => {
@@ -15,7 +16,7 @@ export const fetchMessages = createAsyncThunk("messages/", async (chatId, {
 export const sendMessage = createAsyncThunk("messages/send", async(messageSlice,{
     rejectWithValue})=>{
         try {
-            const {data} = await axios.post("/api/message/send",messageSlice, {withCredentials : true});
+             const {data} = await axios.post("/api/message/send",messageSlice, {withCredentials : true});
             return data;
         } catch (error) {
             return rejectWithValue(error.response?.data || "Something went wrong");
@@ -25,7 +26,13 @@ export const sendMessage = createAsyncThunk("messages/send", async(messageSlice,
 const messageSlice = createSlice({
     name : "message",
     initialState : {messageList : [], loading : false},
-    reducers : {},
+    reducers : {
+        addMessage : (state, action)=>{
+            const message = action.payload;
+            axios.put(`/api/message/read/${message.chat}`, {withCredentials : true});
+            state.messageList.push(message);
+        }
+    },
     extraReducers : (builder)=>{
         builder
             .addCase(fetchMessages.pending, (state)=>{
@@ -40,5 +47,5 @@ const messageSlice = createSlice({
             })
     }
 })
-
+export const {addMessage} = messageSlice.actions;
 export default messageSlice.reducer;
