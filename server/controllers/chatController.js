@@ -64,7 +64,6 @@ export const getChatById = async (req, res) => {
 
         const chat = await Chat.findOne({ _id: chatId, members: userId })
             .populate('members', 'name email profilePicture isOnline updatedAt')
-            .populate('admins', 'name email profilePicture status')
 
         if (!chat) {
             return res.status(404).json({ message: "Chat not found!" })
@@ -127,7 +126,7 @@ export const addMember = async (req, res) => {
         chat.members.push(memberId);
         await chat.save();
 
-        res.status(200).json({ message: "Member added successfully!", chat });
+        res.status(200).json({ message: "Member added successfully!"});
 
     } catch (error) {
         res.status(400).json({ message: error.message })
@@ -169,10 +168,28 @@ export const removeMember = async (req, res) => {
         chat.members = chat.members.filter((member) => member.toString() !== memberId);
         await chat.save();
 
-        res.status(200).json({ message: "Member removed successfully!", chat });
+        res.status(200).json({ message: "Member removed successfully!" });
 
     } catch (error) {
         console.error("Error removing member:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
+export const updateProfile = async(req, res)=>{
+    try {
+        const {chatId, profilePicture, chatName} = req.body;
+
+        const chat = await Chat.findOneAndUpdate({ _id: chatId}, {chatName : chatName, profilePicture : profilePicture}, {new : true})
+        .populate('members', 'name email profilePicture isOnline updatedAt')
+
+        if (!chat) {
+            return res.status(404).json({ message: "Chat not found!" })
+        }
+
+        res.status(200).json(chat)
+
+    } catch (error) {
         res.status(500).json({ message: "Internal Server Error" });
     }
 }

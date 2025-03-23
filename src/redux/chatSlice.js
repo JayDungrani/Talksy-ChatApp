@@ -31,6 +31,37 @@ export const createGroup = createAsyncThunk("chat/createGroup", async (groupDeta
         return rejectWithValue(error.response?.data || "Something went wrong");
     }
 })
+
+export const addGroupMember = createAsyncThunk("chat/add", async (details, {
+    rejectWithValue }) => {
+    try {
+        const { data } = await axios.put(`/api/chats/add`, details, { withCredentials: true })
+        return data;
+    } catch (error) {
+        return rejectWithValue(error.response?.data || "Something went wrong");
+    }
+})
+
+export const removeGroupMember = createAsyncThunk("chat/remove", async (details, {
+    rejectWithValue }) => {
+    try {
+        const { data } = await axios.put(`/api/chats/remove`, details, { withCredentials: true })
+        return data;
+    } catch (error) {
+        return rejectWithValue(error.response?.data || "Something went wrong");
+    }
+})
+
+export const updateGroup = createAsyncThunk("chat/group", async (details, {
+    rejectWithValue }) => {
+    try {
+        const { data } = await axios.put(`/api/chats/groupchange`, details, { withCredentials: true })
+        return data;
+    } catch (error) {
+        return rejectWithValue(error.response?.data || "Something went wrong");
+    }
+})
+
 const chatSlice = createSlice({
     name: "chat",
     initialState: { chatList: [], openedChat: null, listLoading: false, singleChatLoading: false },
@@ -118,7 +149,6 @@ const chatSlice = createSlice({
                 state.loading = true;
             })
             .addCase(fetchChatList.fulfilled, (state, action) => {
-                state.openedChat = null;
                 state.chatList = action.payload.chats;
                 state.loading = false;
             })
@@ -148,6 +178,40 @@ const chatSlice = createSlice({
                 state.listLoading = false
             })
             .addCase(createGroup.rejected, (state) => {
+                state.listLoading = false
+            })
+
+            // Add member
+            .addCase(addGroupMember.pending, (state) => {
+                state.listLoading = true
+            })
+            .addCase(addGroupMember.fulfilled, (state, action) => {
+                state.listLoading = false
+            })
+            .addCase(addGroupMember.rejected, (state) => {
+                state.listLoading = false
+            })
+
+            // Remove member
+            .addCase(removeGroupMember.pending, (state) => {
+                state.listLoading = true
+            })
+            .addCase(removeGroupMember.fulfilled, (state, action) => {
+                state.listLoading = false
+            })
+            .addCase(removeGroupMember.rejected, (state) => {
+                state.listLoading = false
+            })
+
+            // update group
+            .addCase(updateGroup.pending, (state) => {
+                state.listLoading = true
+            })
+            .addCase(updateGroup.fulfilled, (state, action) => {
+                state.openedChat = action.payload
+                state.listLoading = false
+            })
+            .addCase(updateGroup.rejected, (state) => {
                 state.listLoading = false
             })
     }

@@ -6,6 +6,9 @@ import { fetchMessages, sendMessage } from '../redux/messageSlice';
 import SingleMessage from './SingleMessage';
 import { IoSend } from "react-icons/io5";
 import socket from '../socket';
+import { FaRegEdit } from "react-icons/fa";
+import { Tooltip } from '@mui/joy';
+import EditGroupBox from './EditGroupBox';
 
 const ChatWithMessage = () => {
   const dispatch = useDispatch()
@@ -14,7 +17,7 @@ const ChatWithMessage = () => {
   const { messageList } = useSelector(state => state.message)
   const [chatProfile, setChatProfile] = useState({})
   const [content, setContent] = useState("")
-
+  const [showEditGroup, setShowEditGroup] = useState(false)
   const messagesEndRef = useRef(null);
 
   const getFriend = () => {
@@ -26,7 +29,7 @@ const ChatWithMessage = () => {
   }
 
   const handleBackClick = () => {
-    socket.emit("leaveRoom",(openedChat._id))
+    socket.emit("leaveRoom", (openedChat._id))
     dispatch(clearOpenedChat())
     dispatch(fetchChatList())
   }
@@ -59,13 +62,13 @@ const ChatWithMessage = () => {
     const yesterday = nowIST.toISOString().split('T')[0];
 
     if (messageDate === today) {
-        return istDate.toLocaleTimeString('en-IN', { hour: 'numeric', minute: 'numeric', hour12: true });
+      return istDate.toLocaleTimeString('en-IN', { hour: 'numeric', minute: 'numeric', hour12: true });
     } else if (messageDate === yesterday) {
-        return 'Yesterday';
+      return 'Yesterday';
     } else {
-        return istDate.toLocaleDateString('en-IN');
+      return istDate.toLocaleDateString('en-IN');
     }
-};
+  };
 
 
   useEffect(() => {
@@ -103,9 +106,17 @@ const ChatWithMessage = () => {
         </div>
         <div>
           {(!chatProfile.isOnline && chatProfile.updatedAt) &&
-          <p className='text-slate-500 '>
-            Last seen : {convertToIST(chatProfile.updatedAt)}
-          </p>}
+            <p className='text-slate-500 '>
+              Last seen : {convertToIST(chatProfile.updatedAt)}
+            </p>}
+          {(openedChat.isGroupChat && openedChat.admins.includes(user._id)) &&
+            <Tooltip title='Edit Group' color='primary' placement='top' variant='solid'>
+              <FaRegEdit className='text-2xl cursor-pointer' onClick={() => setShowEditGroup(true)} />
+            </Tooltip>
+          }
+          {showEditGroup &&
+            <EditGroupBox openedChat={openedChat} setShowEditGroup={setShowEditGroup}/>
+          }
         </div>
       </div>
 

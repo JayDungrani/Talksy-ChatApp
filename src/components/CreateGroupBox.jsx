@@ -94,6 +94,8 @@ const CreateGroupBox = ({setShowGroupBox}) => {
             <div className='flex flex-col gap-2 bg-slate-50 p-3 rounded-lg items-center shadow-lg shadow-slate-400'>
                 <p className='self-center text-2xl text-slate-600'>Create Group</p>
                 {/* details form */}
+
+                {/* image change */}
                 <div className='flex flex-col items-center gap-1 mb-2 my-1'>
                     <img src={preview} className='size-15 rounded-full border-2 border-blue-800 object-cover' />
                     <Tooltip title='Change Picture' color='primary' placement='top' variant='solid'>
