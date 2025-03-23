@@ -4,7 +4,13 @@ import { CircularProgress } from '@mui/joy'
 
 const AllChatList = ({ chatList, user, listLoading }) => {
   const getFriend = (members) => {
-    return members[0]._id === user._id ? members[1] : members[0]
+    if(!members){
+      return ""
+    }
+    else if(members.length > 0){
+      return members[0]._id === user._id ? members[1] : members[0]
+
+    }
   }
   return (
     <div className='p-4 bg-slate-100 lg:bg-white lg:px-4 lg:py-1 lg:rounded-2xl'>
@@ -19,7 +25,7 @@ const AllChatList = ({ chatList, user, listLoading }) => {
           <SingleChat
             name={chat.chatName}
             profilePicture={chat.profilePicture}
-            latestMessage={chat.latestMessage.content}
+            latestMessage={(chat.latestMessage) ? chat.latestMessage.content : "No message"}
             latestTime={chat.updatedAt}
             unreadMessages={chat.unreadCount}
             key={chat._id}

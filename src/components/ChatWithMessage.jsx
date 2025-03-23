@@ -26,6 +26,7 @@ const ChatWithMessage = () => {
   }
 
   const handleBackClick = () => {
+    socket.emit("leaveRoom",(openedChat._id))
     dispatch(clearOpenedChat())
     dispatch(fetchChatList())
   }

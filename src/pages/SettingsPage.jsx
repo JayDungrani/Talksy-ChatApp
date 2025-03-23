@@ -27,6 +27,7 @@ const SettingsPage = () => {
 
     const formData = new FormData();
     formData.append("image", selectedFile);
+    formData.append("photoId", user._id)
 
     try {
       const { data } = await axios.post("/api/user/picture", formData, {
@@ -36,17 +37,16 @@ const SettingsPage = () => {
       return data;
     } catch (error) {
       console.error("Error uploading image", error);
-      return null;
   };
 }
 
 const handleUpdate = async()=>{
   try {
-    await handleUploadImage()
+    const profileUrl = await handleUploadImage()
     await dispatch(updateProfile(
       {
         name : name,
-        profilePicture : await handleUploadImage(),
+        profilePicture : profileUrl,
         status : status
       }
     )).unwrap()

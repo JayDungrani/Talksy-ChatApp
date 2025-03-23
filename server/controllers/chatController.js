@@ -3,20 +3,23 @@ import { Chat } from "../models/chatModel.js"
 
 export const createGroupChat = async (req, res) => {
     try {
-        const defaultPic = "https://w7.pngwing.com/pngs/522/207/png-transparent-profile-icon-computer-icons-business-management-social-media-service-people-icon-blue-company-people.png"
+        const {userId} = req.token;
+        const defaultPic = "https://w7.pngwing.com/pngs/522/207/png-transparent-profile-icon-computer-icons-business-management-social-media-service-people-icon-blue-company-people.png";
 
-        const { adminsId, chatName, members, profilePicture = defaultPic } = req.body
-
-        const newGroup = new Chat({
+        const { chatName, members, profilePicture = defaultPic } = req.body
+        let newGroup = await new Chat({
             isGroupChat: true,
             chatName: chatName,
             members: members,
-            admins: adminsId,
-            profilePicture: profilePicture
-        })
+            admins: userId,
+            profilePicture: profilePicture,
+        }).save()
+        
+        newGroup = await newGroup.populate('members', 'name email profilePicture isOnline updatedAt')
+        newGroup.latestMessage = {content : "No messages yet!"}
 
-        await newGroup.save()
-        res.status(200).json({ message: "Group created successfully!", newGroup })
+        
+        res.status(200).json(newGroup)
 
     } catch (error) {
         res.status(400).json({ message: error.message })

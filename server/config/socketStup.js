@@ -9,12 +9,14 @@ export const socketSetup = (server) => {
     }
   });
 
+  const users = new Map()
   io.on("connection", (socket) => {
-  
+
     // Notify everyone on room that user is online
     socket.on("userConnected", async (userId) => {
       socket.userId = userId;
-      await User.findByIdAndUpdate(userId, { isOnline: true }, { new: true }).exec()
+      users.set(userId, socket.id);  // Store mapping
+      await User.findByIdAndUpdate(userId, { isOnline: true }, { new: true }).exec();
       socket.broadcast.emit("userOnline", userId);
     });
 
@@ -37,11 +39,24 @@ export const socketSetup = (server) => {
     socket.on("sendMessage", (message) => {
       try {
         io.to(message.chat).emit("new_message", message);
-        socket.broadcast.emit("globalMessage",message)
+        socket.broadcast.emit("globalMessage", message)
       } catch (error) {
         console.log(error)
       }
-      // Emit the message to the chat room
+
+    });
+    socket.on("friendRequest", (request) => {
+      const recipientSocketId = users.get(request.recipient);
+  
+      if (recipientSocketId) {
+        io.to(recipientSocketId).emit("newFriendRequest", request);
+      }
+    });
+
+    socket.on("disconnect", () => {
+      if (socket.userId) {
+        users.delete(socket.userId);
+      }
     });
   });
 }

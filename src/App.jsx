@@ -9,7 +9,7 @@ import AuthPage from './pages/AuthPage'
 import { useDispatch, useSelector } from 'react-redux'
 import ProtectedRoute from './components/ProtectRoute'
 import { useEffect } from 'react'
-import { fetchNotifications } from './redux/friendSlice'
+import { addReqest, fetchNotifications } from './redux/friendSlice'
 import socket from './socket'
 import { clearOpenedChat } from './redux/chatSlice'
 
@@ -20,16 +20,24 @@ function App() {
     if (!user?._id) return;
 
     dispatch(fetchNotifications());
+
+    const handleNotification = (notification) => {
+      dispatch(addReqest(notification));
+    };
+    socket.on('newFriendRequest', handleNotification)
+
     const handleBeforeUnload = () => {
-      socket.emit("userDisconneted",(user._id)); // Send user ID before closing
+      socket.emit("userDisconneted", (user._id)); // Send user ID before closing
       dispatch(clearOpenedChat())
     };
+
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
+      socket.off(user._id, handleNotification)
     };
 
-  }, [dispatch])
+  }, [])
   return (
     <div className='h-screen w-screen
                     grid lg:grid-cols-[1fr_13fr] lg:gap-5 lg:grid-rows-none lg:p-5 

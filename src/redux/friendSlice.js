@@ -40,7 +40,11 @@ export const fetchNotifications = createAsyncThunk("request/list", async (__dirn
 const friendSlice = createSlice({
     name: "friend",
     initialState: { notificationList : [], friendReqList: [], loading: false, responseMessage : "" },
-    reducers: {},
+    reducers: {
+        addReqest : (state, action)=>{
+            state.notificationList.unshift(action.payload)
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(sendFriendReq.fulfilled, (state, action) => {
@@ -85,5 +89,5 @@ const friendSlice = createSlice({
             })
     }
 })
-
+export const {addReqest} = friendSlice.actions
 export default friendSlice.reducer;

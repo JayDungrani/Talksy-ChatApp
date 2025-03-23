@@ -2,12 +2,10 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { IoSearch } from "react-icons/io5";
-import { IoPersonAdd } from "react-icons/io5";
 import { MdOutlineDone } from "react-icons/md";
 import { Tooltip } from '@mui/joy';
 import FriendReqButton from './FriendReqButton';
 import { RxCross2 } from "react-icons/rx";
-import { useSelector } from 'react-redux';
 
 const SearchBar = () => {
     const [query, setQuery] = useState("")

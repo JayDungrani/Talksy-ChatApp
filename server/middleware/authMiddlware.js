@@ -13,7 +13,9 @@ const authMiddleware = async (req, res, next) => {
     }
     catch (error) {
         if (error.name === "TokenExpiredError") {
-            res.clearCookie("token", { httpOnly: true, secure: true, sameSite: "strict" })
+            res.clearCookie("token", 
+                { httpOnly: true, secure: true, sameSite: "strict" }
+            )
             return res.status(401).json({ message: "Session expired", redirect : "/login"});
         }
         return res.status(401).json({ message: "Invalid token" })

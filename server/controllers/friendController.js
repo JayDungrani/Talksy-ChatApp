@@ -27,7 +27,7 @@ export const sendRequest = async (req, res) => {
         });
 
         if (existingRequest) {
-            return res.status(409).json({ message: "Friend request already sent!" });
+            return res.status(409).json({ message: "Friend request already sent!",friendRequest : existingRequest });
         }
 
         //check if sender and receiver are already friends
@@ -39,8 +39,9 @@ export const sendRequest = async (req, res) => {
             return res.status(409).json({message : "You are already friends and have an active chat"})
         }
 
-        const createRequest = new FriendRequest({ sender: senderId, recipient: receiverId })
-        await createRequest.save()
+        let createRequest = await new FriendRequest({ sender: senderId, recipient: receiverId }).save()
+
+        await createRequest.populate("sender","name profilePicture")
 
         res.status(200).json({message : "Request sent successfully!", friendRequest: createRequest })
 
@@ -60,6 +61,14 @@ export const acceptRequest = async(req, res)=>{
         }
 
         const senderId = friendRequest.sender
+        const sameRequestFromOther = await FriendRequest.findOne({
+            sender: receiverId,
+            recipient: senderId
+        });
+        if(sameRequestFromOther){
+            sameRequestFromOther.status = 'accepted'
+            await sameRequestFromOther.save()
+        }
         const existingChat = await Chat.findOne({
             isGroupChat: false,
             members: { $all: [senderId, receiverId] }
@@ -71,11 +80,10 @@ export const acceptRequest = async(req, res)=>{
         friendRequest.status = 'accepted'
         await friendRequest.save()
 
-        const newChat = new Chat({
+        await new Chat({
             isGroupChat : false,
             members : [senderId, receiverId]
-        })
-        await newChat.save()
+        }).save()
 
         res.status(200).json({message : "Request accepted successfully!"})
     } catch (error) {

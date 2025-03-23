@@ -3,6 +3,7 @@ import { IoPersonAdd } from "react-icons/io5";
 import { useDispatch, useSelector } from 'react-redux';
 import { sendFriendReq } from '../redux/friendSlice';
 import { Snackbar } from '@mui/joy';
+import socket from '../socket';
 
 const FriendReqButton = ({ receiverId }) => {
 
@@ -12,9 +13,10 @@ const FriendReqButton = ({ receiverId }) => {
 
     const handleReq = async () => {
         try {
-            await dispatch(sendFriendReq(receiverId)).unwrap()
+            const data = await dispatch(sendFriendReq(receiverId)).unwrap()
+            socket.emit("friendRequest", (data.friendRequest))
         } catch (error) {
-            console.log(error)
+            console.log(error.message)
         }
         setShowMessage(true)
     }

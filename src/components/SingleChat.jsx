@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch } from 'react-redux';
-import { fetchChat } from '../redux/chatSlice';
+import { clearOpenedChat, fetchChat } from '../redux/chatSlice';
 import { setUnreadCountToZero } from '../redux/chatSlice';
 
 const SingleChat = ({ profilePicture, name, latestMessage, latestTime, unreadMessages, id }) => {
@@ -33,16 +33,17 @@ const SingleChat = ({ profilePicture, name, latestMessage, latestTime, unreadMes
   const handleUserClick = async () => {
     try {
       dispatch(setUnreadCountToZero(id))
+      dispatch(clearOpenedChat())
       await dispatch(fetchChat(id)).unwrap()
     } catch (error) {
       console.log(error.message)
     }
   }
   return (
-    <div className='flex items-center justify-between text-slate-800 border-b-1 border-slate-300 px-2 py-4 cursor-pointer' onClick={handleUserClick}>
+    <div className='flex items-center justify-between text-slate-800 border-b-1 border-slate-300 px-2 pb-4 lg:py-4  cursor-pointer' onClick={handleUserClick}>
       <div className='flex items-center gap-3'>
         <img src={profilePicture} className='size-13 lg:size-12 rounded-full' />
-        <div className=''>
+        <div>
           <p className='text-xl lg:text-md font-semibold'>{name}</p>
           <p className='text-slate-600 text-sm'>{latestMessage}</p>
         </div>
@@ -51,7 +52,7 @@ const SingleChat = ({ profilePicture, name, latestMessage, latestTime, unreadMes
       <div className='flex flex-col items-end'>
 
         <p className='text-slate-500 text-sm'>{convertToIST(latestTime)}</p>
-        <p className={`bg-red-600 text-white flex items-center justify-center w-5 h-5 rounded-full ${unreadMessages === 0 && 'invisible'} relative top-1`}>
+        <p className={`bg-red-600 text-white flex items-center justify-center w-5 h-5 rounded-full ${(unreadMessages === 0 || !unreadMessages) && 'invisible'} relative top-1`}>
           <span>
             {unreadMessages}
           </span>

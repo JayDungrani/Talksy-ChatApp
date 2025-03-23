@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import socket from "../socket";
-import { addMessage } from "./messageSlice";
 
 export const fetchChatList = createAsyncThunk("chat/", async (_, {
     rejectWithValue }) => {
@@ -23,12 +22,21 @@ export const fetchChat = createAsyncThunk("chat/getchat", async (chatId, {
     }
 })
 
+export const createGroup = createAsyncThunk("chat/createGroup", async (groupDetails, {
+    rejectWithValue }) => {
+    try {
+        const { data } = await axios.post(`/api/chats/group`, groupDetails, { withCredentials: true })
+        return data;
+    } catch (error) {
+        return rejectWithValue(error.response?.data || "Something went wrong");
+    }
+})
 const chatSlice = createSlice({
     name: "chat",
-    initialState: { chatList: [], openedChat: null, listLoading: false, singleChatLoading : false },
+    initialState: { chatList: [], openedChat: null, listLoading: false, singleChatLoading: false },
     reducers: {
         clearOpenedChat: (state) => {
-            if(state.openedChat){
+            if (state.openedChat) {
                 socket.emit("leaveRoom", (state.openedChat._id))
             }
             state.openedChat = null;
@@ -42,14 +50,11 @@ const chatSlice = createSlice({
             }
         },
 
-        joinRoom : (state, action)=>{
-            if(state.openedChat){
-                socket.emit("leaveRoom", (state.openedChat._id))
-            }
+        joinRoom: (state, action) => {
             socket.emit("joinRoom", (action.payload));
         },
 
-        setUserOnline : (state, action)=>{
+        setUserOnline: (state, action) => {
             const userId = action.payload;
             state.chatList.forEach((chat) => {
                 chat.members.forEach((member) => {
@@ -58,14 +63,16 @@ const chatSlice = createSlice({
                     }
                 });
             });
-            state.openedChat.members.forEach((member)=>{
-                if(member._id === userId){
-                    member.isOnline = true;
-                }
-            })
+            if (state.openedChat) {
+                state.openedChat.members.forEach((member) => {
+                    if (member._id === userId) {
+                        member.isOnline = true;
+                    }
+                })
+            }
         },
 
-        setUserOffline : (state, action)=>{
+        setUserOffline: (state, action) => {
             const userId = action.payload;
             state.chatList.forEach((chat) => {
                 chat.members.forEach((member) => {
@@ -74,29 +81,39 @@ const chatSlice = createSlice({
                     }
                 });
             });
-            state.openedChat.members.forEach((member)=>{
-                if(member._id === userId){
-                    member.isOnline = false;
-                }
-            })
+            if (state.openedChat) {
+                state.openedChat.members.forEach((member) => {
+                    if (member._id === userId) {
+                        member.isOnline = false;
+                    }
+                })
+            }
         },
 
-        addMessageInChatList : (state, action)=>{
+        addMessageInChatList: (state, action) => {
             const message = action.payload
-            console.log(message)
-            state.chatList.forEach(chat =>{
-                if(chat._id === message.chat){
-                    chat.latestMessage = message;
-                    chat.unreadCount += 1;
+            console.log(state.openedChat)
+            state.chatList.forEach(chat => {
+                if (state.openedChat) {
+                    if ((state.openedChat._id !== message.chat) && (chat._id === message.chat)) {
+                        chat.latestMessage = message;
+                        chat.unreadCount += 1;
+                    }
+                }
+                else {
+                    if (chat._id === message.chat) {
+                        chat.latestMessage = message;
+                        chat.unreadCount += 1;
+                    }
                 }
             })
         }
 
     },
-    
+
     extraReducers: (builder) => {
         builder
-        //FETCH CHATLIST
+            //FETCH CHATLIST
             .addCase(fetchChatList.pending, (state) => {
                 state.loading = true;
             })
@@ -109,21 +126,33 @@ const chatSlice = createSlice({
                 state.loading = false;
             })
 
-        //FETCH SINGLECHAT
-            .addCase(fetchChat.pending, (state)=>{
+            //FETCH SINGLECHAT
+            .addCase(fetchChat.pending, (state) => {
                 state.singleChatLoading = true
                 state.openedChat = null
             })
-            .addCase(fetchChat.fulfilled, (state, action)=>{
+            .addCase(fetchChat.fulfilled, (state, action) => {
                 state.openedChat = action.payload
                 state.singleChatLoading = false
             })
-            .addCase(fetchChat.rejected, (state)=>{
+            .addCase(fetchChat.rejected, (state) => {
                 state.singleChatLoading = false
+            })
+
+            //CREATE GROUP
+            .addCase(createGroup.pending, (state) => {
+                state.listLoading = true
+            })
+            .addCase(createGroup.fulfilled, (state, action) => {
+                state.chatList.unshift(action.payload)
+                state.listLoading = false
+            })
+            .addCase(createGroup.rejected, (state) => {
+                state.listLoading = false
             })
     }
 })
 
-export const {clearOpenedChat, setUnreadCountToZero, setUserOnline, setUserOffline, joinRoom, addMessageInChatList} = chatSlice.actions;
+export const { clearOpenedChat, setUnreadCountToZero, setUserOnline, setUserOffline, joinRoom, addMessageInChatList } = chatSlice.actions;
 
 export default chatSlice.reducer;
