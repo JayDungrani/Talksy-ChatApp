@@ -5,8 +5,8 @@ import socket from "../socket";
 export const fetchMessages = createAsyncThunk("messages/", async (chatId, {
     rejectWithValue }) => {
     try {
-        await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/message/read/${chatId}`, {withCredentials : true});
-        const { data } = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/message/${chatId}`, { withCredentials: true })
+        await axios.put(`/api/message/read/${chatId}`, {withCredentials : true});
+        const { data } = await axios.get(`/api/message/${chatId}`, { withCredentials: true })
         return data
     } catch (error) {
         return rejectWithValue(error.response?.data || "Something went wrong");
@@ -16,7 +16,7 @@ export const fetchMessages = createAsyncThunk("messages/", async (chatId, {
 export const sendMessage = createAsyncThunk("messages/send", async(messageSlice,{
     rejectWithValue})=>{
         try {
-             const {data} = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/message/send`,messageSlice, {withCredentials : true});
+             const {data} = await axios.post(`/api/message/send`,messageSlice, {withCredentials : true});
             return data;
         } catch (error) {
             return rejectWithValue(error.response?.data || "Something went wrong");
@@ -29,7 +29,7 @@ const messageSlice = createSlice({
     reducers : {
         addMessage : (state, action)=>{
             const message = action.payload;
-            axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/message/read/${message.chat}`, {withCredentials : true});
+            axios.put(`/api/message/read/${message.chat}`, {withCredentials : true});
             state.messageList.push(message);
         }
     },

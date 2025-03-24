@@ -15,7 +15,7 @@ const SearchBar = () => {
 
     const fetchUsers = async () => {
         try {
-            const { data } = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/user/searchlist?search=${query}`, { withCredentials: true });
+            const { data } = await axios.get(`/api/user/searchlist?search=${query}`, { withCredentials: true });
             setUsers(data.usersList)
         } catch (error) {
             console.log(error)
