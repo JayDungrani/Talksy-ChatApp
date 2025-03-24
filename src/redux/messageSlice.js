@@ -4,7 +4,7 @@ import axios from "axios";
 export const fetchMessages = createAsyncThunk("messages/", async (chatId, {
     rejectWithValue }) => {
     try {
-        await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/message/read/${chatId}`, {withCredentials : true});
+        await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/message/read/${chatId}`, {},{withCredentials : true});
         const { data } = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/message/${chatId}`, { withCredentials: true })
         return data
     } catch (error) {
