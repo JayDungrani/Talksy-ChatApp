@@ -30,6 +30,7 @@ function App() {
           setIsServerOnline(false);
         }
       } catch (error) {
+        
         console.log(`/api/user/health`)
         console.log(error)
         setIsServerOnline(false);
