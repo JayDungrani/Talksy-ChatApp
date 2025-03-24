@@ -25,6 +25,7 @@ function App() {
         const response = await axios.get(`/api/user/health`); // Replace with your server health endpoint
         if (response.status === 200) {
           setIsServerOnline(true);
+          clearInterval(interval); 
         } else {
           setIsServerOnline(false);
         }
@@ -54,10 +55,10 @@ function App() {
     return () => {
       clearInterval(interval); // Cleanup on unmount
       window.removeEventListener("beforeunload", handleBeforeUnload);
-      socket.off(user._id, handleNotification)
+      socket.off('newFriendRequest', handleNotification)
     };
 
-  }, [user])
+  }, [])
 
   if (!isServerOnline) {
     return (
