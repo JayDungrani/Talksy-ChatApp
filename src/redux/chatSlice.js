@@ -5,7 +5,7 @@ import socket from "../socket";
 export const fetchChatList = createAsyncThunk("chat/", async (_, {
     rejectWithValue }) => {
     try {
-        const { data } = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/chats`, { withCredentials: true })
+        const { data } = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/chats`,{}, { withCredentials: true })
         return data
     } catch (error) {
         return rejectWithValue(error.response?.data || "Something went wrong");
@@ -15,7 +15,7 @@ export const fetchChatList = createAsyncThunk("chat/", async (_, {
 export const fetchChat = createAsyncThunk("chat/getchat", async (chatId, {
     rejectWithValue }) => {
     try {
-        const { data } = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/chats/${chatId}`, { withCredentials: true })
+        const { data } = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/chats/${chatId}`,{}, { withCredentials: true })
         return data
     } catch (error) {
         return rejectWithValue(error.response?.data || "Something went wrong");

@@ -23,6 +23,7 @@ function App() {
     const checkServerStatus = async () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/user/health`); // Replace with your server health endpoint
+        console.log(`${import.meta.env.VITE_API_BASE_URL}/api/user/health`)
         if (response.status === 200) {
           setIsServerOnline(true);
           clearInterval(interval); 
