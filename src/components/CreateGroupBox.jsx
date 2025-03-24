@@ -25,7 +25,7 @@ const CreateGroupBox = ({setShowGroupBox}) => {
     //for user search list
     const fetchUsers = async () => {
         try {
-            const { data } = await axios.get(`/api/user/searchlist?search=${query}`, { withCredentials: true });
+            const { data } = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/user/searchlist?search=${query}`, { withCredentials: true });
             setUsers(data.usersList)
         } catch (error) {
             console.log(error)
@@ -60,7 +60,7 @@ const CreateGroupBox = ({setShowGroupBox}) => {
             const formData = new FormData();
             formData.append("image", selectedFile);
 
-            const { data } = await axios.post(`/api/user/picture`, formData, {
+            const { data } = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/user/picture`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
                 withCredentials: true
             });

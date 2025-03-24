@@ -22,7 +22,7 @@ function App() {
   useEffect(() => {
     const checkServerStatus = async () => {
       try {
-        const response = await axios.get(`/api/user/health`); // Replace with your server health endpoint
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/user/health`); // Replace with your server health endpoint
         if (response.status === 200) {
           setIsServerOnline(true);
           clearInterval(interval); 
@@ -30,8 +30,6 @@ function App() {
           setIsServerOnline(false);
         }
       } catch (error) {
-        
-        console.log(`/api/user/health`)
         console.log(error)
         setIsServerOnline(false);
       }

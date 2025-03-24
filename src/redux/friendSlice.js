@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const sendFriendReq = createAsyncThunk("request/send", async (receiverId, { rejectWithValue }) => {
     try {
-        const { data } = await axios.post(`/api/friend/send/${receiverId}`, { withCredentials : true });
+        const { data } = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/friend/send/${receiverId}`, { withCredentials : true });
         return data
     } catch (error) {
         return rejectWithValue(error.response?.data || "Something went wrong");
@@ -12,7 +12,7 @@ export const sendFriendReq = createAsyncThunk("request/send", async (receiverId,
 
 export const acceptFriendReq = createAsyncThunk("request/accept", async (reqId, { rejectWithValue }) => {
     try {
-        const {data} = await axios.post(`/api/friend/accept/${reqId}`, { withCredentials:true });
+        const {data} = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/friend/accept/${reqId}`, { withCredentials:true });
         return data;
     } catch (error) {
         return rejectWithValue(error.response?.data || "Something went wrong");
@@ -21,7 +21,7 @@ export const acceptFriendReq = createAsyncThunk("request/accept", async (reqId, 
 
 export const rejectFriendReq = createAsyncThunk("request/reject", async (reqId, { rejectWithValue }) => {
     try {
-        const {data} = await axios.post(`/api/friend/reject/${reqId}`, { withCredentials:true });
+        const {data} = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/friend/reject/${reqId}`, { withCredentials:true });
         return data;
     } catch (error) {
         return rejectWithValue(error.response?.data || "Something went wrong");
@@ -30,7 +30,7 @@ export const rejectFriendReq = createAsyncThunk("request/reject", async (reqId, 
 
 export const fetchNotifications = createAsyncThunk("request/list", async (__dirname, {rejectWithValue})=>{
     try {
-        const {data} = await axios.get(`/api/notification`,{withCredentials : true})
+        const {data} = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/notification`,{withCredentials : true})
         return data
     } catch (error) {
         return rejectWithValue(error.response?.data || "Something went wrong");

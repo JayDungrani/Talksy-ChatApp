@@ -5,7 +5,7 @@ import socket from "../socket";
 export const fetchChatList = createAsyncThunk("chat/", async (_, {
     rejectWithValue }) => {
     try {
-        const { data } = await axios.get(`/api/chats`, { withCredentials: true })
+        const { data } = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/chats`, { withCredentials: true })
         return data
     } catch (error) {
         return rejectWithValue(error.response?.data || "Something went wrong");
@@ -15,7 +15,7 @@ export const fetchChatList = createAsyncThunk("chat/", async (_, {
 export const fetchChat = createAsyncThunk("chat/getchat", async (chatId, {
     rejectWithValue }) => {
     try {
-        const { data } = await axios.get(`/api/chats/${chatId}`, { withCredentials: true })
+        const { data } = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/chats/${chatId}`, { withCredentials: true })
         return data
     } catch (error) {
         return rejectWithValue(error.response?.data || "Something went wrong");
@@ -25,7 +25,7 @@ export const fetchChat = createAsyncThunk("chat/getchat", async (chatId, {
 export const createGroup = createAsyncThunk("chat/createGroup", async (groupDetails, {
     rejectWithValue }) => {
     try {
-        const { data } = await axios.post(`/api/chats/group`, groupDetails, { withCredentials: true })
+        const { data } = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/chats/group`, groupDetails, { withCredentials: true })
         return data;
     } catch (error) {
         return rejectWithValue(error.response?.data || "Something went wrong");
@@ -35,7 +35,7 @@ export const createGroup = createAsyncThunk("chat/createGroup", async (groupDeta
 export const addGroupMember = createAsyncThunk("chat/add", async (details, {
     rejectWithValue }) => {
     try {
-        const { data } = await axios.put(`/api/chats/add`, details, { withCredentials: true })
+        const { data } = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/chats/add`, details, { withCredentials: true })
         return data;
     } catch (error) {
         return rejectWithValue(error.response?.data || "Something went wrong");
@@ -45,7 +45,7 @@ export const addGroupMember = createAsyncThunk("chat/add", async (details, {
 export const removeGroupMember = createAsyncThunk("chat/remove", async (details, {
     rejectWithValue }) => {
     try {
-        const { data } = await axios.put(`/api/chats/remove`, details, { withCredentials: true })
+        const { data } = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/chats/remove`, details, { withCredentials: true })
         return data;
     } catch (error) {
         return rejectWithValue(error.response?.data || "Something went wrong");
@@ -55,7 +55,7 @@ export const removeGroupMember = createAsyncThunk("chat/remove", async (details,
 export const updateGroup = createAsyncThunk("chat/group", async (details, {
     rejectWithValue }) => {
     try {
-        const { data } = await axios.put(`/api/chats/groupchange`, details, { withCredentials: true })
+        const { data } = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/chats/groupchange`, details, { withCredentials: true })
         return data;
     } catch (error) {
         return rejectWithValue(error.response?.data || "Something went wrong");

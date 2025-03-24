@@ -30,7 +30,7 @@ const SettingsPage = () => {
     formData.append("photoId", user._id)
 
     try {
-      const { data } = await axios.post(`/api/user/picture`, formData, {
+      const { data } = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/user/picture`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
         withCredentials : true
       });
