@@ -25,7 +25,6 @@ const LoginPage = () => {
     try {
       e.preventDefault();
       const resultAction = await dispatch(loginUser(userData)).unwrap();
-
       if (resultAction) {
         await dispatch(fetchUser()).unwrap()
         navigate("/chats"); // Redirect on successful login

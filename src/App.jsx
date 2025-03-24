@@ -22,7 +22,7 @@ function App() {
   useEffect(() => {
     const checkServerStatus = async () => {
       try {
-        const response = await axios.get(`/api/user/health`); // Replace with your server health endpoint
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/user/health`); // Replace with your server health endpoint
         if (response.status === 200) {
           setIsServerOnline(true);
         } else {
@@ -35,7 +35,7 @@ function App() {
     checkServerStatus(); // Check on mount
     // Poll every 5 seconds
     const interval = setInterval(checkServerStatus, 5000);
-
+    if(!user) return ;
     dispatch(fetchNotifications());
 
     const handleNotification = (notification) => {
@@ -57,7 +57,7 @@ function App() {
       socket.off(user._id, handleNotification)
     };
 
-  }, [])
+  }, [user])
 
   if (!isServerOnline) {
     return (

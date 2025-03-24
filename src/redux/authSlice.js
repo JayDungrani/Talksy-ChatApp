@@ -4,7 +4,7 @@ import axios from "axios";
 // 🔹 LOGIN USER (No token storage, uses cookies)
 export const loginUser = createAsyncThunk("auth/login", async (userData, { rejectWithValue }) => {
   try {
-    await axios.post("/api/user/login", userData, { withCredentials: true });
+    await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/user/login`, userData, { withCredentials: true });
     return true;
   } catch (error) {
     return rejectWithValue(error.response?.data || "Something went wrong");
@@ -14,7 +14,7 @@ export const loginUser = createAsyncThunk("auth/login", async (userData, { rejec
 // 🔹 SIGNUP USER
 export const signupUser = createAsyncThunk("auth/signup", async(userData, {rejectWithValue})=>{
   try {
-    await axios.post("/api/user/signup", userData, { withCredentials: true });
+    await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/user/signup`, userData, { withCredentials: true });
     return true;
   } catch (error) {
     return rejectWithValue(error.response?.data || "Something went wrong");
@@ -24,7 +24,7 @@ export const signupUser = createAsyncThunk("auth/signup", async(userData, {rejec
 // 🔹 FETCH USER DATA (Uses stored cookie for authentication)
 export const fetchUser = createAsyncThunk("auth/fetchUser", async (_, { rejectWithValue }) => {
   try {
-    const { data } = await axios.get("/api/user/me", { withCredentials: true });
+    const { data } = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/user/me`, { withCredentials: true });
     return data;
   } catch (error) {
     return rejectWithValue(error.response?.data || "Not authenticated");
@@ -34,7 +34,7 @@ export const fetchUser = createAsyncThunk("auth/fetchUser", async (_, { rejectWi
 // 🔹 LOGOUT USER (Clears cookie)
 export const logoutUser = createAsyncThunk("auth/logout", async (_, { rejectWithValue }) => {
   try {
-    await axios.post("/api/user/logout", {}, { withCredentials: true });
+    await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/user/logout`, {}, { withCredentials: true });
     return true;
   } catch (error) {
     return rejectWithValue(error.response?.data || "Logout failed");
@@ -44,7 +44,7 @@ export const logoutUser = createAsyncThunk("auth/logout", async (_, { rejectWith
 
 export const updateProfile = createAsyncThunk("auth/update", async (userData, { rejectWithValue }) => {
   try {
-    const {data} = await axios.post("/api/user/update", userData, { withCredentials: true });
+    const {data} = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/user/update`, userData, { withCredentials: true });
     return data;
   } catch (error) {
     return rejectWithValue(error.response?.data || "Something went wrong");
