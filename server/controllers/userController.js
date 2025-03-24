@@ -15,7 +15,7 @@ export const signUp = async (req, res) => {
         await newUser.save()
 
         const token = await generateToken(newUser._id)
-        res.cookie("jwtToken", token, {
+        await res.cookie("jwtToken", token, {
             httpOnly: true,
             secure: true,
             sameSite: "none",
@@ -42,7 +42,7 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: "Enter correct password!" })
         }
         const token = await generateToken(user._id)
-        res.cookie("jwtToken", token, {
+        await res.cookie("jwtToken", token, {
             httpOnly: true,
             secure: true,
             sameSite: "none",

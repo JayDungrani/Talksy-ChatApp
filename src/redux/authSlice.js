@@ -24,7 +24,7 @@ export const signupUser = createAsyncThunk("auth/signup", async(userData, {rejec
 // 🔹 FETCH USER DATA (Uses stored cookie for authentication)
 export const fetchUser = createAsyncThunk("auth/fetchUser", async (_, { rejectWithValue }) => {
   try {
-    const { data } = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/user/me`,{}, { withCredentials: true });
+    const { data } = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/user/me`,{ withCredentials: true });
     return data;
   } catch (error) {
     return rejectWithValue(error.response?.data || "Not authenticated");
