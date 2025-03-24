@@ -34,7 +34,7 @@ export const fetchUser = createAsyncThunk("auth/fetchUser", async (_, { rejectWi
 // 🔹 LOGOUT USER (Clears cookie)
 export const logoutUser = createAsyncThunk("auth/logout", async (_, { rejectWithValue }) => {
   try {
-    await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/user/logout`, {}, { withCredentials: true });
+    await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/user/logout`,{ withCredentials: true });
     return true;
   } catch (error) {
     return rejectWithValue(error.response?.data || "Logout failed");
