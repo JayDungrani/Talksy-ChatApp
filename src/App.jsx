@@ -57,7 +57,7 @@ function App() {
       socket.off(user._id, handleNotification)
     };
 
-  }, [user._id])
+  }, [])
 
   if (!isServerOnline) {
     return (

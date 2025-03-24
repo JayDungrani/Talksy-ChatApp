@@ -8,7 +8,6 @@ import chatRoutes from './routes/chatRoutes.js'
 import messageRoutes from './routes/messageRoutes.js'
 import notificationRoutes from "./routes/notificationRoutes.js"
 import cors from 'cors'
-import { Server } from 'socket.io'
 import { socketSetup } from './config/socketStup.js'
 
 dotenv.config()
