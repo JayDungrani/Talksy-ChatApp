@@ -23,6 +23,7 @@ function App() {
     const checkServerStatus = async () => {
       try {
         const response = await axios.get(`/api/user/health`); // Replace with your server health endpoint
+        console.log(`/api/user/health`)
         if (response.status === 200) {
           setIsServerOnline(true);
           clearInterval(interval); 
