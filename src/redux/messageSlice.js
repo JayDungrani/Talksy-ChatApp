@@ -28,7 +28,7 @@ const messageSlice = createSlice({
     reducers : {
         addMessage : async(state, action)=>{
             const message = action.payload;
-            await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/message/read/${message.chat}`,{withCredentials : true});
+            await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/message/read/${message.chat}`,{}, {withCredentials : true});
             state.messageList.push(message);
         }
     },
