@@ -118,3 +118,6 @@ export const updateProfile = async (req, res) => {
     }
 }
 
+export const health = async(req, res)=>{
+    res.status(200).json({ status: "Server is online" });
+}

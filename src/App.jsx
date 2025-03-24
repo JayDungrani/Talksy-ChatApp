@@ -8,16 +8,33 @@ import SignUpPage from './pages/SignUpPage'
 import AuthPage from './pages/AuthPage'
 import { useDispatch, useSelector } from 'react-redux'
 import ProtectedRoute from './components/ProtectRoute'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { addReqest, fetchNotifications } from './redux/friendSlice'
 import socket from './socket'
 import { clearOpenedChat } from './redux/chatSlice'
+import axios from 'axios'
 
 function App() {
   const dispatch = useDispatch()
   const { user } = useSelector((state) => state.auth)
+  const [isServerOnline, setIsServerOnline] = useState(false);
+
   useEffect(() => {
-    if (!user?._id) return;
+    const checkServerStatus = async () => {
+      try {
+        const response = await axios.get(`/api/user/health`); // Replace with your server health endpoint
+        if (response.status === 200) {
+          setIsServerOnline(true);
+        } else {
+          setIsServerOnline(false);
+        }
+      } catch (error) {
+        setIsServerOnline(false);
+      }
+    };
+    checkServerStatus(); // Check on mount
+    // Poll every 5 seconds
+    const interval = setInterval(checkServerStatus, 5000);
 
     dispatch(fetchNotifications());
 
@@ -32,12 +49,25 @@ function App() {
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
+
+    
     return () => {
+      clearInterval(interval); // Cleanup on unmount
       window.removeEventListener("beforeunload", handleBeforeUnload);
       socket.off(user._id, handleNotification)
     };
 
-  }, [])
+  }, [user._id])
+
+  if (!isServerOnline) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center text-center">
+        <h1 className="text-2xl font-bold">Waiting for Server...</h1>
+        <p className="text-gray-600 mt-2">Please wait while we try to reconnect.</p>
+      </div>
+    );
+  }
+
   return (
     <div className='h-screen w-screen
                     grid lg:grid-cols-[1fr_13fr] lg:gap-5 lg:grid-rows-none lg:p-5 

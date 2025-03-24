@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getMe, login, logOut, signUp, getUsersList, updateProfile } from "../controllers/userController.js";
+import { getMe, login, logOut, signUp, getUsersList, updateProfile, health } from "../controllers/userController.js";
 import authMiddleware from "../middleware/authMiddlware.js";
 import { uploadImage} from "../config/cloudinarySetup.js";
 import multer from 'multer';
@@ -15,5 +15,5 @@ router.route("/me").get(authMiddleware, getMe)
 router.route("/searchlist").get(authMiddleware, getUsersList)
 router.route("/update").post(authMiddleware, updateProfile)
 router.route("/picture").post(authMiddleware,upload.single('image'), uploadImage)
-
+router.route("/health").get(health)
 export default router;
