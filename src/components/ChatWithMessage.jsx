@@ -115,47 +115,47 @@ const ChatWithMessage = () => {
             </Tooltip>
           }
           {showEditGroup &&
-            <EditGroupBox openedChat={openedChat} setShowEditGroup={setShowEditGroup}/>
+            <EditGroupBox openedChat={openedChat} setShowEditGroup={setShowEditGroup} />
           }
         </div>
       </div>
 
-      <div className='flex flex-col justify-between h-17/20'>
+      {messageList &&
+        <div className='flex flex-col justify-between h-17/20'>
+          {(messageList.length !== 0) ?
+            <div className='flex flex-col gap-4 overflow-y-auto max-h-9/10 p-2'>
+              {messageList.map((message, index) => {
+                const showUserDetails =
+                  index === 0 || messageList[index - 1].sender._id !== message.sender._id;
 
-        {(messageList.length !== 0) ?
-          <div className='flex flex-col gap-4 overflow-y-auto max-h-9/10 p-2'>
-            {messageList.map((message, index) => {
-              const showUserDetails =
-                index === 0 || messageList[index - 1].sender._id !== message.sender._id;
+                return (<SingleMessage
+                  message={message}
+                  userId={user._id}
+                  key={message._id}
+                  isGroupChat={openedChat.isGroupChat}
+                  showUserDetails={showUserDetails}
+                />)
+              })}
+              <div ref={messagesEndRef} />
+            </div>
+            :
+            <p className='text-2xl text-slate-500 self-center'>No messages yet!</p>
+          }
 
-              return (<SingleMessage
-                message={message}
-                userId={user._id}
-                key={message._id}
-                isGroupChat={openedChat.isGroupChat}
-                showUserDetails={showUserDetails}
-              />)
-            })}
-            <div ref={messagesEndRef} />
-          </div>
-          :
-          <p className='text-2xl text-slate-500 self-center'>No messages yet!</p>
-        }
-
-        <div className='flex items-center gap-2 max-lg:absolute max-lg:bottom-5 max-lg:w-full max-lg:left-0 max-lg:px-3'>
-          <input
-            type='text'
-            placeholder='Type your message here...'
-            className='bg-[#EFF6FC] py-2 px-5 rounded-xl w-full'
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          />
-          <div className='bg-[#006CD0] rounded-full' onClick={handleSendMessage}>
-            <IoSend className='text-2xl cursor-pointer text-white m-2 ' />
+          <div className='flex items-center gap-2 max-lg:absolute max-lg:bottom-5 max-lg:w-full max-lg:left-0 max-lg:px-3'>
+            <input
+              type='text'
+              placeholder='Type your message here...'
+              className='bg-[#EFF6FC] py-2 px-5 rounded-xl w-full'
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+            />
+            <div className='bg-[#006CD0] rounded-full' onClick={handleSendMessage}>
+              <IoSend className='text-2xl cursor-pointer text-white m-2 ' />
+            </div>
           </div>
         </div>
-      </div>
-
+      }
     </div>
   )
 }
