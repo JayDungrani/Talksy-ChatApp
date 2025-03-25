@@ -44,7 +44,7 @@ Talksy is a modern real-time chat application built with the MERN stack and Sock
 
 ```bash
 git clone https://github.com/JayDungrani/Talksy-ChatApp.git
-cd talksy
+cd Talksy-ChatApp/
 ```
 
 ### 2️⃣ Install Dependencies
